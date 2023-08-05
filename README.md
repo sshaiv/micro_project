@@ -5,12 +5,14 @@ Description:
 
 It is a simple Student enrollment form which takes the below things as input from the user and saves the data into the jdpd INPUT FIELDS
 
-Roll No
-Name
-Class
-Birthdate
-Adress
-Enrollment date
+ 1.Roll No
+2.Name
+ 3.Class
+ 4.Birthdate
+ 5.Adress
+ 6.Enrollment date
+
+
 Table of Contents:
 
 1.Benefits of using JSONPowerDB
