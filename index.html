@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.4/jpdb-commons.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Entrollment_form</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Entrollment Form</h2>
+        <form method="get">
+            <input type="text" name="Roll_no" id="Roll_no" placeholder="Roll_no" onchange="getStudent()" required >
+           <input type="text" name="Name" id="Name" placeholder="Full Name" required >
+           <input type="text" name="Class" id="Class" placeholder="Class" required >
+           <input type="text" name="DOB" id="DOB" placeholder="DOB" required >
+           <input type="text" name="Address" id="Address" placeholder="Address" required >
+           <label for="Entroll_Date">Entroll_Date</label>
+           <input type="date" name="Entroll_Date" id="Entroll_Date" placeholder="Entroll_Date" required >
+          
+          
+           <input type="button" id="Save" value="Save" onclick="savesign();">
+           <input type="button" id="reset" value="reset" onclick="resetform();">
+            <input type="button" id="update" value="update" onclick="updateFormWithData();">
+         
+        </form>
+    </div>
+
+    <script>
+ 
+        //validate form data
+
+        $("#Roll_no").focus();
+        function validateAndGetFormData() {
+            var Roll_noVar = $("#Roll_no").val();               //jquery  empid value 
+            if (Roll_noVar === "") {
+                alert("Roll_no");
+                $("#Roll_no").focus();
+                return "";
+            }
+            var NameVar = $("#Name").val();
+            if (NameVar === "") {
+                alert("Name");
+                $("#Name").focus();
+                return "";
+            }
+
+            var ClassVar = $("#Class").val();
+            if (ClassVar === "") {
+                alert("Class");
+                $("#Class").focus();
+                return "";
+            }
+
+
+            var DOBVar = $("#DOB").val();
+            if (DOBVar === "") {
+                alert("DOB");
+                $("#DOB").focus();
+                return "";
+            }
+
+            var AddressVar = $("#Address").val();
+            if (AddressVar === "") {
+                alert("Address");
+                $("#Address").focus();
+                return "";
+            }
+           
+            var Entroll_DateVar = $("#Entroll_Date").val();
+            if (Entroll_DateVar === "") {
+                alert("Entroll_Date");
+                $("#Entroll_Date").focus();
+                return "";
+            }
+
+            var jsonStrObj = {
+                Roll_no: Roll_noVar,
+                Name: NameVar,
+                Class :ClassVar ,
+                DOB:DOBVar ,
+                Address:AddressVar ,
+                Entroll_Date:Entroll_DateVar
+              
+            };
+            return JSON.stringify(jsonStrObj);
+        }
+
+        //main function for save button
+
+        function savesign() {
+            var jsonStr = validateAndGetFormData();
+            if (jsonStr === "") {
+                return;
+            }
+            var putReqStr = createPUTRequest("90931367|-31949321257650570|90950215",
+                jsonStr, "Student", "Entrollment-Rel");
+            // alert(putReqStr);
+            jQuery.ajaxSetup({ async: false });
+            var resultObj =  executeCommandAtGivenBaseUrl(putReqStr,
+                "http://api.login2explore.com:5577", "/api/iml");
+            // alert(JSON.stringify(resultObj));
+            jQuery.ajaxSetup({ async: true });
+            resetForm();
+        }
+
+
+        //get function
+       
+
+// ... Existing code ...
+
+function updateFormWithData() {
+    var Roll_noVar = $("#Roll_no").val();
+    if (Roll_noVar === "") {
+        alert("Please enter a Roll No. to retrieve data for update.");
+        $("#Roll_no").focus();
+        return;
+    }
+    
+    var getRequestStr = createGETRequest("90931367|-31949321257650570|90950215",
+        "Student", "Entrollment-Rel", Roll_noVar);
+    
+    jQuery.ajaxSetup({ async: false });
+    var resultObj = executeCommandAtGivenBaseUrl(getRequestStr,
+        "http://api.login2explore.com:5577", "/api/irl");
+    jQuery.ajaxSetup({ async: true });
+
+    if (resultObj.statusCode === "200") {
+        var data = JSON.parse(resultObj.body);
+        $("#Name").val(data.Name);
+        $("#Class").val(data.Class);
+        $("#DOB").val(data.DOB);
+        $("#Address").val(data.Address);
+        $("#Entroll_Date").val(data.Entroll_Date);
+        $("#Update").prop("disabled", false);
+        $("#Roll_no").prop("disabled", true);
+    } else {
+        alert("Data not found for the provided Roll No.");
+        resetForm();
+    }
+}
+
+// ... Rest of your code ...
+
+
+
+        //reset form data reset button
+
+        function resetform() {
+            $("#Roll_no").val("")
+            $("#Name").val("");
+            $("#Class").val("");
+            $("#DOB").val("");
+            $("#Address").val("");
+            $("#Entroll_Date").val("");
+            $("#Roll_no").focus();
+            $("#Roll_no").prop("disabled",false);
+        }
+       
+    </script>
+
+</body>
+</html>
